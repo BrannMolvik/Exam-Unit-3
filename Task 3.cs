@@ -5,7 +5,7 @@ namespace task3
     class Program
     {
         private const string FilePath = @"C:\Users\BrannMolvik\Documents\examUnit3\example_files\nodes.json";
-        private const string FileNotFoundMessage = "The file '{0}' was not found.";
+        private const string FileNotFound = "The file '{0}' was not found.";
         private const string ProblemMessage = "A problem has occurred with reading the file.";
         private const string ValueKey = "value";
         private const char SpaceChar = ' ';
@@ -30,7 +30,7 @@ namespace task3
             }
             catch (FileNotFoundException)
             {
-                Console.WriteLine(string.Format(FileNotFoundMessage, FilePath));
+                Console.WriteLine(string.Format(FileNotFound, FilePath));
             }
             catch (Exception)
             {

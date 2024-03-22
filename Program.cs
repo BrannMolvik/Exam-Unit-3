@@ -8,7 +8,8 @@ namespace Exam3
         {
             //FunctionsAreAPopping.RunMathAndName();
             //task2.Program.FlattenThoseNumbers();
-            task3.Program.LeftAndRight();
+            //task3.Program.LeftAndRight();
+            task4.Program.MessyBooks();
         }
     }
 }
