@@ -7,7 +7,8 @@ namespace Exam3
         static void Main(string[] args)
         {
             //FunctionsAreAPopping.RunMathAndName();
-            task2.Program.FlattenThoseNumbers();
+            //task2.Program.FlattenThoseNumbers();
+            task3.Program.LeftAndRight();
         }
     }
 }

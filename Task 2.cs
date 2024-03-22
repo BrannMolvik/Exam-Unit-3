@@ -6,7 +6,6 @@ namespace task2
     {
         private const string FilePath = @"C:\Users\BrannMolvik\Documents\examUnit3\example_files\arrays.json";
         private const string FileNotFound = "The file '{0}' was not found.";
-        private const string Error = "An error occurred while reading the file: {0}";
         private const string Problem = "A problem has occurred with reading the file.";
 
         public static void FlattenThoseNumbers()
