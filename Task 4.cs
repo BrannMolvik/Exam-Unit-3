@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace task4
@@ -17,6 +21,13 @@ namespace task4
         private const string NoBooksFoundMessage = "No books found.";
         private const string NewLines = "\n\n\n";
         private const string BookInfo = "Title: {0}, Author: {1}, Publication Year: {2}, ISBN: {3}";
+        const int StartYear = 1992;
+        private static readonly string BooksAfterMessage = $"\u001b[34mNumber of books written in and after January {StartYear}: {{0}}\u001b[0m";
+        private static readonly string BooksBeforeMessage = $"\u001b[34mNumber of books written before {BeforeYear}: {{0}}\u001b[0m";
+        const int BeforeYear = 2004;
+
+        private const string AuthorSearch = "Brandon Sanderson";
+        private const string AuthorSearchMessage = $"\u001b[34mISBN numbers by {AuthorSearch} are: \u001b[0m";
 
         public static void MessyBooks()
         {
@@ -40,6 +51,20 @@ namespace task4
                     {
                         Console.WriteLine(string.Format(BookInfo, book.TITLE, book.Author, book.Publication_year, book.Isbn));
                     }
+                    Console.WriteLine(NewLines);
+                    int booksAfterYearCount = books.Count(book => book.Publication_year >= StartYear);
+                    Console.WriteLine(string.Format(BooksAfterMessage, booksAfterYearCount));
+                    Console.WriteLine(NewLines);
+
+                    int booksBeforeYearCount = books.Count(book => book.Publication_year < BeforeYear);
+                    Console.WriteLine(string.Format(BooksBeforeMessage, booksBeforeYearCount));
+                    Console.WriteLine(NewLines);
+
+                    List<string> isbnNumbers = IsbnNumbersByAuthor(books, AuthorSearch);
+                    foreach (var isbn in isbnNumbers)
+                    {
+                        Console.WriteLine("ISBN: " + isbn);
+                    }
                 }
                 else
                 {
@@ -54,6 +79,21 @@ namespace task4
             {
                 Console.WriteLine(ErrorJsonMessage + ex.Message);
             }
+        }
+
+        public static List<string> IsbnNumbersByAuthor(List<Book> books, string authorName)
+        {
+            List<string> isbnNumbers = new List<string>();
+            Console.WriteLine(AuthorSearchMessage);
+            foreach (var book in books)
+            {
+                if (book.Author != null && book.Author.Equals(authorName, StringComparison.OrdinalIgnoreCase))
+                {
+                    isbnNumbers.Add(book.Isbn ?? "");
+                }
+            }
+
+            return isbnNumbers;
         }
 
         private static List<Book>? ReadBooksFromJson(string filePath)
@@ -104,7 +144,7 @@ namespace task4
             return ContainsCharacter(input, character);
         }
 
-        private static bool ContainsCharacterAfterParentheses(string input, string character)
+        private static bool ContainsCharacterAfterParentheses(string input,string character)
         {
             int index = input.IndexOf("(");
             if (index != -1)
