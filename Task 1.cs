@@ -180,6 +180,7 @@
             string name = Console.ReadLine();
 
             Console.WriteLine(RandomGreeting(name));
+            Console.ReadKey();
         }
     }
 }

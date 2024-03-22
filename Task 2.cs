@@ -18,6 +18,7 @@ namespace task2
                     var flattenedList = FlattenArray(doc.RootElement);
                     Console.WriteLine(string.Join(", ", flattenedList));
                 }
+                Console.ReadKey();
             }
             catch (FileNotFoundException)
             {

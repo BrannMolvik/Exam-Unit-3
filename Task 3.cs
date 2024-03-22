@@ -36,6 +36,7 @@ namespace task3
             {
                 Console.WriteLine(ProblemMessage);
             }
+            Console.ReadKey();
         }
 
         private static int CalculateSumFromJson()

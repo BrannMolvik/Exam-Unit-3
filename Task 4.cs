@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace task4
@@ -27,7 +23,13 @@ namespace task4
         const int BeforeYear = 2004;
 
         private const string AuthorSearch = "Brandon Sanderson";
+        private const string IsbnName = "ISBN: ";
         private const string AuthorSearchMessage = $"\u001b[34mISBN numbers by {AuthorSearch} are: \u001b[0m";
+        private const string SortedBooks = $"\u001b[34mSorted books example age: \u001b[0m";
+        private const string sortedBooksMessage = $"\u001b[34m{NewLines}Example of sorted books Chronologically: \u001b[0m";
+        private const string Author = "Author: ";
+        private const string AuthorMessage = $"\u001b[34m{NewLines}Here are books by each author grouped up:\u001b[0m";
+        private const string AuthorMessageFirstName = $"\u001b[34m{NewLines}Here are books by each author grouped up by first name:\u001b[0m";
 
         public static void MessyBooks()
         {
@@ -36,6 +38,22 @@ namespace task4
                 List<Book>? books = ReadBooksFromJson(FilePath);
                 if (books != null)
                 {
+                    SortBooksAlphabeticallyAscending(books);
+
+                    Console.WriteLine(SortedBooks);
+                    foreach (var book in books)
+                    {
+                        Console.WriteLine(string.Format(BookInfo, book.TITLE, book.Author, book.Publication_year, book.Isbn));
+                    }
+                    Console.WriteLine(sortedBooksMessage);
+                    SortBooksChronologicallyAscending(books);
+                    foreach (var book in books)
+                    {
+                        Console.WriteLine(string.Format(BookInfo, book.TITLE, book.Author, book.Publication_year, book.Isbn));
+                    }
+
+                    Console.WriteLine(NewLines);
+
                     List<Book> booksStartingWithThe = FilterBooksStartingWith(books, StartingWith);
 
                     Console.WriteLine(BooksStartingWith);
@@ -43,7 +61,9 @@ namespace task4
                     {
                         Console.WriteLine(string.Format(BookInfo, book.TITLE, book.Author, book.Publication_year, book.Isbn));
                     }
+
                     Console.WriteLine(NewLines);
+
                     List<Book> authorsWithT = FilterAuthorsWithT(books);
 
                     Console.WriteLine(AuthorsWithTMessage);
@@ -51,7 +71,9 @@ namespace task4
                     {
                         Console.WriteLine(string.Format(BookInfo, book.TITLE, book.Author, book.Publication_year, book.Isbn));
                     }
+
                     Console.WriteLine(NewLines);
+
                     int booksAfterYearCount = books.Count(book => book.Publication_year >= StartYear);
                     Console.WriteLine(string.Format(BooksAfterMessage, booksAfterYearCount));
                     Console.WriteLine(NewLines);
@@ -63,8 +85,11 @@ namespace task4
                     List<string> isbnNumbers = IsbnNumbersByAuthor(books, AuthorSearch);
                     foreach (var isbn in isbnNumbers)
                     {
-                        Console.WriteLine("ISBN: " + isbn);
+                        Console.WriteLine(IsbnName + isbn);
                     }
+
+                    Console.WriteLine(AuthorMessageFirstName);
+                    GroupBooksByAuthorFirstName(books);
                 }
                 else
                 {
@@ -96,6 +121,26 @@ namespace task4
             return isbnNumbers;
         }
 
+        public static void SortBooksAlphabeticallyAscending(List<Book> books)
+        {
+            books.Sort((x, y) => string.Compare(x.TITLE, y.TITLE, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static void SortBooksAlphabeticallyDescending(List<Book> books)
+        {
+            books.Sort((x, y) => string.Compare(y.TITLE, x.TITLE, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static void SortBooksChronologicallyAscending(List<Book> books)
+        {
+            books.Sort((x, y) => x.Publication_year.CompareTo(y.Publication_year));
+        }
+
+        public static void SortBooksChronologicallyDescending(List<Book> books)
+        {
+            books.Sort((x, y) => y.Publication_year.CompareTo(x.Publication_year));
+        }
+
         private static List<Book>? ReadBooksFromJson(string filePath)
         {
             if (!File.Exists(filePath))
@@ -116,7 +161,7 @@ namespace task4
             }
         }
 
-        private static List<Book> FilterBooksStartingWith(List<Book> books, string StartingWith)
+        private static List<Book> FilterBooksStartingWith(List<Book> books, string startingWith)
         {
             return books.Where(book =>
                 book.Author != null &&
@@ -135,8 +180,7 @@ namespace task4
 
         private static bool ContainsCharacterBeforeParentheses(string input, string character)
         {
-            int index = input.IndexOf("(");
-            if (index != -1)
+            int index = input.IndexOf("(");  if (index != -1)
             {
                 string substring = input.Substring(0, index);
                 return ContainsCharacter(substring, character);
@@ -144,7 +188,7 @@ namespace task4
             return ContainsCharacter(input, character);
         }
 
-        private static bool ContainsCharacterAfterParentheses(string input,string character)
+        private static bool ContainsCharacterAfterParentheses(string input, string character)
         {
             int index = input.IndexOf("(");
             if (index != -1)
@@ -159,20 +203,43 @@ namespace task4
         {
             return input.IndexOf(character, StringComparison.OrdinalIgnoreCase) != -1;
         }
-    }
 
-    public class Book
-    {
-        [JsonPropertyName("title")]
-        public string? TITLE { get; set; }
+        public static void GroupBooksByAuthorFirstName(List<Book> books)
+        {
+            var groupedBooks = books.GroupBy(book =>
+            {
+                var authorParts = book.Author?.Split(' ');
+                if (authorParts != null && authorParts.Length > 0)
+                {
+                    return authorParts.FirstOrDefault()?.Trim('(', ')');
+                }
+                return "";
+            });
 
-        [JsonPropertyName("publication_year")]
-        public int Publication_year { get; set; }
+            foreach (var group in groupedBooks)
+            {
+                Console.WriteLine($"{Author}{group.Key}");
+                foreach (var book in group)
+                {
+                    Console.WriteLine(string.Format(BookInfo, book.TITLE, book.Author?.Replace("(", ", ").Replace(")", ""), book.Publication_year, book.Isbn));
+                }
+                Console.WriteLine(NewLines);
+            }
+        }
 
-        [JsonPropertyName("author")]
-        public string? Author { get; set; }
+        public class Book
+        {
+            [JsonPropertyName("title")]
+            public string? TITLE { get; set; }
 
-        [JsonPropertyName("isbn")]
-        public string? Isbn { get; set; }
+            [JsonPropertyName("publication_year")]
+            public int Publication_year { get; set; }
+
+            [JsonPropertyName("author")]
+            public string? Author { get; set; }
+
+            [JsonPropertyName("isbn")]
+            public string? Isbn { get; set; }
+        }
     }
 }
