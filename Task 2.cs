@@ -2,7 +2,7 @@
 {
     class Program
     {
-        public static void sayHello()
+        public static void FlattenThoseNumbers()
         {
             Console.WriteLine("Hello");
         }

@@ -6,8 +6,8 @@ namespace Exam3
     {
         static void Main(string[] args)
         {
-            MathFunctions.RunMathAndName();
-            task2.Program.sayHello();
+            FunctionsAreAPopping.RunMathAndName();
+            task2.Program.FlattenThoseNumbers();
         }
     }
 }

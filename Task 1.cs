@@ -1,6 +1,6 @@
 ﻿namespace Exam3
 {
-    public class MathFunctions
+    public class FunctionsAreAPopping
     {
         private const string EnterNumberSquare = "Enter a number to square:";
         private const string InvalidInput = "Invalid input. Please enter a valid number.";
