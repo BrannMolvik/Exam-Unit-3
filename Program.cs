@@ -6,7 +6,7 @@ namespace Exam3
     {
         static void Main(string[] args)
         {
-            FunctionsAreAPopping.RunMathAndName();
+            //FunctionsAreAPopping.RunMathAndName();
             task2.Program.FlattenThoseNumbers();
         }
     }
